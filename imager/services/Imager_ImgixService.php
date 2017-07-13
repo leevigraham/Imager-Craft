@@ -73,7 +73,13 @@ class Imager_ImgixService extends BaseApplicationComponent
             if (craft()->imager->getSetting('imgixSourceIsWebProxy', $transform) === true) {
                 $url = $builder->createURL($image->url, $params);
             } else {
-                $url = $builder->createURL($image->path, $params);
+                if($image->getSource()->type === "S3") {
+                    $path = implode("/", array($image->getSource()->settings['subfolder'], $image->getPath()));
+                } else {
+                    $path = $image->path;
+                }
+                $url = $builder->createURL($path, $params);
+
             }
         }
 
